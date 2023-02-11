@@ -9,11 +9,11 @@ import logging
 import json
 
 logging.basicConfig(
-    format = "%(asctime)s %(message)s",
-    level = logging.DEBUG,
+    format="%(asctime)s %(message)s",
+    level=logging.DEBUG,
 )
 
-me = sys.argv[1] # 'client2'
+me = sys.argv[1]  # 'client2'
 
 # msg = {
 #     "to": "client2, client3", # "all"
@@ -32,6 +32,7 @@ def parseJson(jsonMsg):
     except json.JSONDecodeError:
         return None
 
+
 def consumer(message):
     msg = parseJson(message)
     if not msg:
@@ -45,15 +46,17 @@ def consumer(message):
         return
     verb = msg["verb"]
     print("consumer received msg from: " + src)
-    
+
+
 async def producer():
     test = {}
-    test['to'] = 'client3'
-    test['from'] = me
-    test['verb'] = 'request'
-    test['msg'] = 'msg from: ' + me
+    test["to"] = "client3"
+    test["from"] = me
+    test["verb"] = "request"
+    test["msg"] = "msg from: " + me
     return json.dumps(test)
-    
+
+
 async def consumer_handler(websocket):
     try:
         async for message in websocket:
@@ -61,7 +64,8 @@ async def consumer_handler(websocket):
     except websockets.ConnectionClosed:
         logging.error("ConnectionClosed in consumer_handler")
         pass
-    
+
+
 async def producer_handler(websocket):
     while True:
         await asyncio.sleep(2.5)
@@ -71,28 +75,28 @@ async def producer_handler(websocket):
         except websockets.ConnectionClosed:
             logging.error("ConnectionClosed in producer_handler")
             continue
-        
+
+
 async def handler(websocket):
     consumer_task = asyncio.create_task(consumer_handler(websocket))
     producer_task = asyncio.create_task(producer_handler(websocket))
     done, pending = await asyncio.wait(
         [consumer_task, producer_task],
-        return_when = asyncio.FIRST_COMPLETED,
-        )
+        return_when=asyncio.FIRST_COMPLETED,
+    )
     for task in pending:
         task.cancel()
-        
+
+
 async def client():
     uri = "ws://localhost:8764" + me
     async for websocket in websockets.connect(uri):
         # close the connection when receiving SIGTERM.
         loop = asyncio.get_running_loop()
-        loop.add_signal_handler(
-            signal.SIGTERM, loop.create_task, websocket.close())
-            
+        loop.add_signal_handler(signal.SIGTERM, loop.create_task, websocket.close())
+
         await handler(websocket)
 
 
 if __name__ == "__main__":
     asyncio.run(client())
-    
