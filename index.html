@@ -42,6 +42,7 @@
             messages.shift();
           }
         } else {
+        
           return ''
         }
         messages_str = '';
@@ -53,12 +54,13 @@
       }
 
       function onMessage(event) {
-        messages.push(event.data) if ('' == get_message()) {
+        messages.push(event.data);
+        if ('' == get_message()) {        
           document.getElementById('message').innerHTML += '<br />' + event.data;
-        } else {
+        } else {        
           document.getElementById('message').innerHTML = messages_str;
         }
-        window.navigator.vibrate(200);
+        // window.navigator.vibrate(200);
       }
 
       function onOpen(event) {
@@ -79,7 +81,7 @@
       function closeConn() {
         webSocket.send(JSON.stringify({
           verb: "bye",
-          from: `${myname}`
+          from: `${myname}`,
         }));
       }
 
@@ -98,7 +100,7 @@
           alert("name is empty");
           return;
         }
-        webSocket = new WebSocket('ws://192.168.56.107:8765/' + myname);
+        webSocket = new WebSocket('ws://60.247.144.61:8765/' + myname);
 
         webSocket.onerror = function(event) {
           onError(event)
