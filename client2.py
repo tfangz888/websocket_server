@@ -89,7 +89,7 @@ async def handler(websocket):
 
 
 async def client():
-    uri = "ws://localhost:8764" + me
+    uri = "ws://localhost:8765" + me
     async for websocket in websockets.connect(uri):
         # close the connection when receiving SIGTERM.
         loop = asyncio.get_running_loop()
