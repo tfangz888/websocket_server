@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<title>websocket client</title>
+	</head>
+	<body>
+		<div>
+			<label for="name"> Name: </label> <br />
+			<input type="text" id="name" name="name" />
+			<input type="button" value="Connect" onclick="start()" /> <br />
+			<label for="cmd"> Command: </label> <br />
+			<input type="text" id="cmd" name="cmd" />
+			<input type="button" value="Send" onclick="send()" />
+			<input type="button" value="Close" onclick="closeConn()" /> <br />
+		</div>
+		<div id="message"></div>
+		<script type="text/javascript">
+			   var webSocket;
+			var myname;
+			var messages = []
+			var messges_str;
+			const total = 200; // 总行数
+			function get_message() {
+			    if (messages.length > total) {
+				var count = 2;
+				while(count > 0) {
+				count--;
+				messages.shift();
+				}
+				} else {
+				    return ''
+				}
+				messages_str = '';
+				messages.forEach(function(item, index,obj) {
+				    messages_str = messages_str + '<br />' +item;
+				})
+
+				return messages_str
+			}
+
+			function onMessage(event) {
+			    messages.push(event.data)
+				if ('' == get_message()) {
+				  document.getElementById('messages').innerHTML
+				  += '<br />' + event.data;
+				} else {
+				  document.getElementById('message').innerHTML = messages_str;
+				}
+				window.navigator.vibrate(200);
+			}
+
+			function onOpen(event){
+			  messages.push('Connection established');
+			  document.getElementById('messages').innerHTML += '<br />' + 'Connection established';
+			}
+
+			function onClose(event) {
+			  messages.push('Connection closed');
+			  document.getElementById('messages').innerHTML += '<br />' + 'Connection closed';
+			}
+
+			function onError(event) {
+			  alert(event.data);
+			  alert("error");
+			}
+
+			function closeConn() {
+			  webSocket.send(JSON.stringify({ verb: "bye", from: `${myname}` }));
+			}
+
+			function send() {
+			  value = document.getElementById('cmd').value
+			  if (value == "") {
+			    alert("value is empty");
+				return;
+			  }
+			  webSocket.send(document.getElementById('cmd').value);
+			}
+
+			function start() {
+			  myname = document.getElementById('name').value;
+			  if (myname == "") {
+			    alert("name is empty");
+				return;
+			  }
+			  webSocket = new WebSocket('ws://192.168.56.107:8765/' + myname);
+
+			  webSocket.onerror = function (event) {
+			    onError(event)
+			  };
+
+			  webSocket.onopen = function (event) {
+			    onOpen(event)
+			  };
+
+			  webSocket.onclose = function (event) {
+			    onClose(event)
+			  };
+
+			  webSocket.onmessage = function (event) {
+			    onMessage(event)
+			  };
+
+			  return false;
+			}
+		</script>
+	</body>
+</html>
