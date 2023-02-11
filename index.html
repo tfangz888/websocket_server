@@ -54,7 +54,7 @@
 
       function onMessage(event) {
         messages.push(event.data) if ('' == get_message()) {
-          document.getElementById('messages').innerHTML += '<br />' + event.data;
+          document.getElementById('message').innerHTML += '<br />' + event.data;
         } else {
           document.getElementById('message').innerHTML = messages_str;
         }
@@ -63,12 +63,12 @@
 
       function onOpen(event) {
         messages.push('Connection established');
-        document.getElementById('messages').innerHTML += '<br />' + 'Connection established';
+        document.getElementById('message').innerHTML += '<br />' + 'Connection established';
       }
 
       function onClose(event) {
         messages.push('Connection closed');
-        document.getElementById('messages').innerHTML += '<br />' + 'Connection closed';
+        document.getElementById('message').innerHTML += '<br />' + 'Connection closed';
       }
 
       function onError(event) {
