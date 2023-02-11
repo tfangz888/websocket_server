@@ -79,9 +79,7 @@
       function closeConn() {
         webSocket.send(JSON.stringify({
           verb: "bye",
-          from: `$ {
-            myname
-          }`
+          from: `${myname}`
         }));
       }
 
