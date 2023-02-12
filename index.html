@@ -13,6 +13,8 @@
     <div>
       <input type="checkbox" id="vibration" name="vibration" >
       <label for="vibration">Vibration</label>
+      <input type="checkbox" id="music" name="music" >
+      <label for="music">Music</label>
     </div>
       <label for="name">
         Name:
@@ -58,13 +60,13 @@ Date.prototype.Format = function (fmt) { //author: meizz
     return fmt;
 }
 
-
       var webSocket;
       var myname;
       var messages = []
       var messges_str;
       const total = 50; // 总行数   
       const vibration = document.querySelector('#vibration');
+      const music = document.querySelector('#music');
      
 
       function get_message() {
@@ -97,6 +99,10 @@ Date.prototype.Format = function (fmt) { //author: meizz
         
         if (vibration.checked) {
              window.navigator.vibrate(400);
+        }
+        if (music.checked) {
+            var sound = new Audio('https://www.soundjay.com/misc/censor-beep-01.mp3');
+            sound.play();
         }
         
       }
@@ -138,7 +144,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
           alert("name is empty");
           return;
         }
-        webSocket = new WebSocket('ws://60.247.144.61:8765/' + myname);
+        webSocket = new WebSocket('ws://IP:8765/' + myname);
 
         webSocket.onerror = function(event) {
           onError(event)
