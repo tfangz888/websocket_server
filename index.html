@@ -100,7 +100,7 @@
           alert("name is empty");
           return;
         }
-        webSocket = new WebSocket('ws://60.247.144.61:8765/' + myname);
+        webSocket = new WebSocket('ws://IP:8765/' + myname);
 
         webSocket.onerror = function(event) {
           onError(event)
