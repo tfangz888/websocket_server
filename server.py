@@ -39,11 +39,11 @@ async def send(websocket, message):
     except websockets.ConnectionClosed:
         logging.error("error sending: %s", message)
         del_key = None
-    for key in CONNECTIONS:
-        if websocket == CONNECTIONS[key]:
-            del_key = key
-    if del_key:
-        del CONNECTIONS[del_key]
+        for key in CONNECTIONS:
+            if websocket == CONNECTIONS[key]:
+                del_key = key
+        if del_key:
+            del CONNECTIONS[del_key]
 
 
 def message_all(message):
