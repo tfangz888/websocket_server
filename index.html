@@ -10,6 +10,10 @@
   
   <body>
     <div>
+    <div>
+      <input type="checkbox" id="vibration" name="vibration" >
+      <label for="vibration">Vibration</label>
+    </div>
       <label for="name">
         Name:
       </label>
@@ -59,7 +63,10 @@ Date.prototype.Format = function (fmt) { //author: meizz
       var myname;
       var messages = []
       var messges_str;
-      const total = 50; // 总行数
+      const total = 50; // 总行数   
+      const vibration = document.querySelector('#vibration');
+     
+
       function get_message() {
         if (messages.length > total) {
           var count = 2;
@@ -87,7 +94,11 @@ Date.prototype.Format = function (fmt) { //author: meizz
         } else {        
           document.getElementById('message').innerHTML = messages_str;
         }
-        window.navigator.vibrate(400);
+        
+        if (vibration.checked) {
+             window.navigator.vibrate(400);
+        }
+        
       }
 
       function onOpen(event) {
@@ -127,7 +138,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
           alert("name is empty");
           return;
         }
-        webSocket = new WebSocket('ws://IP:8765/' + myname);
+        webSocket = new WebSocket('ws://60.247.144.61:8765/' + myname);
 
         webSocket.onerror = function(event) {
           onError(event)
